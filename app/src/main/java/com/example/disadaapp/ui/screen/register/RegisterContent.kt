@@ -81,7 +81,6 @@ fun RegisterContent(
         return validateUsername && validateEmail && validatePhoneNumber && validatePassword
     }
 
-    //check the error
     fun register (
         username: String,
         email: String,

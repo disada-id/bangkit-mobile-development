@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">DisadaApp</string>
+    <string name="validateNameError">Please, input a valid name</string>
+    <string name="validateEmailError">Please, input a valid email</string>
+    <string name="validatePhoneNumberError">Please, input a valid phone number</string>
+    <string name="validatePasswordError">Your password must contain at least 8 character</string>
+
 </resources>

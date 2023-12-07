@@ -9,10 +9,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.example.disadaapp" />
+                  <option name="mobileSdkAppId" value="1:970096237569:android:f35a4119b78ffbc20a3400" />
+                  <option name="projectId" value="disada-82fa4" />
+                  <option name="projectNumber" value="970096237569" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

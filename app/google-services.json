@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "970096237569",
+    "project_id": "disada-82fa4",
+    "storage_bucket": "disada-82fa4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:970096237569:android:f35a4119b78ffbc20a3400",
+        "android_client_info": {
+          "package_name": "com.example.disadaapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLPih_UtYBLLgmkPfzMNPvenrlbiYyjiE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

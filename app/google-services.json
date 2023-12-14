@@ -12,7 +12,20 @@
           "package_name": "com.example.disadaapp"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "970096237569-s5dd33ff0i3td42ptu3pndlhrtrm4n18.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.disadaapp",
+            "certificate_hash": "6873eb71ef7109f48febca73352a59449617c81a"
+          }
+        },
+        {
+          "client_id": "970096237569-aivlabaab0ar0le7570loolucgjoaign.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCLPih_UtYBLLgmkPfzMNPvenrlbiYyjiE"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "970096237569-aivlabaab0ar0le7570loolucgjoaign.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

@@ -1,5 +1,7 @@
 package com.example.disadaapp.di
 
+import com.example.disadaapp.data.DisadaRepository
+import com.example.disadaapp.data.DisadaRepositoryImpl
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
@@ -14,4 +16,10 @@ object AppModule {
     @Provides
     @Singleton
     fun firebaseProvide() = FirebaseAuth.getInstance()
+
+    @Provides
+    @Singleton
+    fun provideDisadaRepository(firebaseAuth: FirebaseAuth): DisadaRepository {
+        return DisadaRepositoryImpl(firebaseAuth)
+    }
 }

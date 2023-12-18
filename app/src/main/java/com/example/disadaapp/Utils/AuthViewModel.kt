@@ -28,7 +28,7 @@ class AuthViewModel @Inject constructor(
     val googleState: State<GoogleSignInState> = _googleState
 
     private val _apiState = MutableStateFlow<ApiResponse<SignupResponse>>(ApiResponse.Empty)
-    val apiState: StateFlow<ApiResponse<SignupResponse>> = _apiState
+    val apiState: StateFlow<ApiResponse<SignupResponse>> get() = _apiState
 
     private val _loginState = MutableStateFlow<ApiResponse<SigninResponse>>(ApiResponse.Empty)
     val loginState: StateFlow<ApiResponse<SigninResponse>> = _loginState

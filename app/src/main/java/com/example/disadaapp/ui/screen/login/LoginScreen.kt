@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -41,11 +42,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -223,13 +227,37 @@ fun LoginScreen(
                     }
                 }
                 Box(
-                    modifier = Modifier.padding(top = 20.dp),
-                    //verticalArrangement = Arrangement.Bottom,
+                    modifier = Modifier
+                        .fillMaxHeight(fraction = 0.8f)
+                        .fillMaxWidth()
+                        .padding(top = 20.dp),
                     contentAlignment = Alignment.BottomCenter,
                 ) {
-                    Row() {
-                        Text("Don't have an account? Register", textAlign = TextAlign.Center)
-                    }
+                    Text(
+                        text = buildAnnotatedString {
+                            withStyle(
+                                style = SpanStyle(
+                                    color = Color.DarkGray,
+                                    fontSize = 14.sp,
+                                    fontFamily = poppinsFamily,
+                                    fontWeight = FontWeight.Normal
+                                )
+                            ){
+                                append("Don't have an account?")
+                            }
+                            withStyle(
+                                style = SpanStyle(
+                                    color = Color.Black,
+                                    fontSize = 14.sp,
+                                    fontFamily = poppinsFamily,
+                                    fontWeight = FontWeight.Medium
+                                )
+                            ){
+                                append(" ")
+                                append("Register")
+                            }
+                        }
+                    )
                 }
             }
 

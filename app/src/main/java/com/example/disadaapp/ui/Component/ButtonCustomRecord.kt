@@ -28,7 +28,7 @@ fun ButtonCustomRecord(
             painter = painterResource(id = R.drawable.btn_record),
             contentDescription = contentDescription,
             modifier = Modifier
-                .size(350.dp)
+                .size(250.dp)
                 .clip(CircleShape)
                 .clickable(onClick = onClick)// Ubah ukuran ikon sesuai keinginan
         )

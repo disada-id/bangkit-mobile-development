@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -48,19 +49,24 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.disadaapp.R
 import com.example.disadaapp.Utils.AuthViewModel
-import com.example.disadaapp.Utils.Constant.firebase_server_client
+import com.example.disadaapp.Utils.Constant
 import com.example.disadaapp.Utils.ValidationUtil
 import com.example.disadaapp.data.network.ApiResponse
 import com.example.disadaapp.ui.Component.TextFieldWithValidation
+import com.example.disadaapp.ui.theme.DisadaAppTheme
 import com.example.disadaapp.ui.theme.DullPink
 import com.example.disadaapp.ui.theme.poppinsFamily
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -73,7 +79,7 @@ import kotlinx.coroutines.launch
 fun RegisterScreen (
     modifier: Modifier = Modifier,
     viewModel: AuthViewModel = hiltViewModel(),
-    onRegistrationSuccess: () -> Unit
+    onRegistrationSuccess: () -> Unit,
 ) {
     val googleSignInState = viewModel.googleState.value
     val launcher =
@@ -99,7 +105,7 @@ fun RegisterScreen (
     var fullname by rememberSaveable { mutableStateOf("") }
     var nohp by rememberSaveable { mutableStateOf("") }
 
-    // Observer untuk status API
+    //Observer untuk status API
     val apiState by viewModel.apiState.collectAsState()
     var isLoading by rememberSaveable { mutableStateOf(false) }
 
@@ -252,7 +258,7 @@ fun RegisterScreen (
                 IconButton(onClick = {
                     val buildGoogleSignInRequest = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                         .requestEmail()
-                        .requestIdToken(firebase_server_client)
+                        .requestIdToken(Constant.firebase_server_client)
                         .build()
 
                     val googleSignInClient = GoogleSignIn.getClient(context, buildGoogleSignInRequest)
@@ -268,19 +274,42 @@ fun RegisterScreen (
                 LaunchedEffect(key1 = googleSignInState.success) {
                     scope.launch {
                         if (googleSignInState.success != null) {
-                            Toast.makeText(context, "sign in success", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Sign With Google Success", Toast.LENGTH_SHORT).show()
+                            onRegistrationSuccess.invoke()
                         }
                     }
                 }
             }
             Box(
-                modifier = Modifier.padding(top = 20.dp),
-                //verticalArrangement = Arrangement.Bottom,
+                modifier = Modifier
+                    .fillMaxHeight(fraction = 0.8f)
+                    .fillMaxWidth()
+                    .padding(top = 20.dp),
                 contentAlignment = Alignment.BottomCenter,
             ) {
-                Row() {
-                    Text("Already have an account? Login")
-                }
+                Text(text = buildAnnotatedString {
+                    withStyle(
+                        style = SpanStyle(
+                            color = Color.Gray,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Normal,
+                            fontFamily = poppinsFamily
+                        )
+                    ) {
+                        append("Already have an account?")
+                    }
+                    withStyle(
+                        style = SpanStyle(
+                            color = Color.Black,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium,
+                            fontFamily = poppinsFamily
+                        )
+                    ) {
+                        append(" ")
+                        append("Login")
+                    }
+                })
             }
         }
     }
@@ -289,13 +318,14 @@ fun RegisterScreen (
 @Composable
 fun Snackbar(modifier: Modifier, text: String) {
     Text(text = "error Register")
-
 }
 
-//@Preview(showBackground = true)
-//@Composable
-//fun DisadaAppPreview() {
-//    DisadaAppTheme {
-//        RegisterScreen()
-//    }
-//}
+@Preview(showBackground = true)
+@Composable
+fun DisadaAppPreview() {
+    DisadaAppTheme {
+        RegisterScreen(
+            onRegistrationSuccess = {}
+        )
+    }
+}

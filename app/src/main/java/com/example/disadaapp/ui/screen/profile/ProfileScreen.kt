@@ -1,18 +1,16 @@
 package com.example.disadaapp.ui.screen.profile
 
-import android.content.Context
-import androidx.compose.material3.Text
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.disadaapp.navigation.Route
 import com.example.disadaapp.ui.screen.login.LoginScreen
 import com.example.disadaapp.ui.screen.register.RegisterScreen
 import kotlinx.coroutines.launch
-import androidx.navigation.compose.rememberNavController
 
 
 @Composable
@@ -39,4 +37,10 @@ fun ProfileScreen() {
             LoginScreen()
         }
     }
+    ProfileContent()
+}
+
+@Composable
+fun ProfileContent() {
+
 }

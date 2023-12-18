@@ -94,8 +94,9 @@ dependencies {
     implementation ("androidx.hilt:hilt-navigation-compose:1.1.0")
 
     implementation ("androidx.compose.material:material-icons-extended:1.5.4")
+    implementation ("io.coil-kt:coil-compose:2.4.0")
 
-    implementation ("androidx.compose.material:material-icons-extended:1.5.3")
+    implementation ("androidx.compose.material:material-icons-extended:1.5.4")
 
     //retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
@@ -103,6 +104,4 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
 
-    //doughnat chart
-    implementation ("com.github.fracassi-marco:JetChart:1.3.7")
 }

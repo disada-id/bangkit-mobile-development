@@ -175,7 +175,9 @@ fun LoginScreen(
                         FocusDirection.Down)})
                 )
                 Button(
-                    onClick = { /* TODO: Handle login button click */ },
+                    onClick = {
+                              viewModel.signin(email, password)
+                    },
                     colors = ButtonDefaults.buttonColors(DullPink),
                     modifier = Modifier
                         .fillMaxWidth()

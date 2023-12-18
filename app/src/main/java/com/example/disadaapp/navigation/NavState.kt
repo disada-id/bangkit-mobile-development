@@ -85,6 +85,8 @@ class NavState @OptIn(ExperimentalMaterial3Api::class) constructor(
                 is Route.Profile ->{
                     navController.navigate(item.screen.route)
                 }
+
+                else -> {}
             }
 //
 //            val snackbarResult = snackbarHostState.showSnackbar(
@@ -122,6 +124,7 @@ fun rememberMyNavDrawerState(
     context: Context = LocalContext.current,
     navController: NavHostController = rememberNavController()
 ): NavState =
+
     remember(drawerState,coroutinesScope,snackbarHostState,context, navController){
         NavState(drawerState, coroutinesScope, snackbarHostState, context, navController)
 

@@ -26,6 +26,7 @@ import androidx.compose.material.icons.filled.PermIdentity
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -33,6 +34,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
@@ -50,7 +52,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -58,8 +59,8 @@ import com.example.disadaapp.R
 import com.example.disadaapp.Utils.AuthViewModel
 import com.example.disadaapp.Utils.Constant.firebase_server_client
 import com.example.disadaapp.Utils.ValidationUtil
+import com.example.disadaapp.data.network.ApiResponse
 import com.example.disadaapp.ui.Component.TextFieldWithValidation
-import com.example.disadaapp.ui.theme.DisadaAppTheme
 import com.example.disadaapp.ui.theme.DullPink
 import com.example.disadaapp.ui.theme.poppinsFamily
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -72,6 +73,7 @@ import kotlinx.coroutines.launch
 fun RegisterScreen (
     modifier: Modifier = Modifier,
     viewModel: AuthViewModel = hiltViewModel(),
+    onRegistrationSuccess: () -> Unit
 ) {
     val googleSignInState = viewModel.googleState.value
     val launcher =
@@ -86,14 +88,21 @@ fun RegisterScreen (
                 print(e)
             }
         }
+
     val focusManager = LocalFocusManager.current
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
-    var username by rememberSaveable { mutableStateOf("") }
     var email by rememberSaveable { mutableStateOf("") }
-    var phoneNumber by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
+    var username by rememberSaveable { mutableStateOf("") }
+    var fullname by rememberSaveable { mutableStateOf("") }
+    var nohp by rememberSaveable { mutableStateOf("") }
+
+    // Observer untuk status API
+    val apiState by viewModel.apiState.collectAsState()
+    var isLoading by rememberSaveable { mutableStateOf(false) }
+
 
     //ui
     Surface(
@@ -140,6 +149,22 @@ fun RegisterScreen (
                 keyboardActions = KeyboardActions(onNext = {focusManager.moveFocus(FocusDirection.Down)})
             )
             TextFieldWithValidation(
+                value = fullname, // Ganti dengan data yang sesuai
+                onValueChange = { fullname = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 10.dp, start = 40.dp, end = 40.dp),
+                label = stringResource(id = R.string.fullname_label),
+                imeAction = ImeAction.Next,
+                validation = { ValidationUtil.isUsernameValid(it) },
+                validationHint = stringResource(id = R.string.validateNameError),
+                iconResId = Icons.Default.PermIdentity,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text
+                ),
+                keyboardActions = KeyboardActions(onNext = {focusManager.moveFocus(FocusDirection.Down)})
+            )
+            TextFieldWithValidation(
                 value = email, // Ganti dengan data yang sesuai
                 onValueChange = { email = it },
                 modifier = Modifier
@@ -156,8 +181,8 @@ fun RegisterScreen (
                 keyboardActions = KeyboardActions(onNext = {focusManager.moveFocus(FocusDirection.Down)})
             )
             TextFieldWithValidation(
-                value = phoneNumber, // Ganti dengan data yang sesuai
-                onValueChange = { phoneNumber = it },
+                value = nohp, // Ganti dengan data yang sesuai
+                onValueChange = { nohp = it },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 10.dp, start = 40.dp, end = 40.dp),
@@ -190,14 +215,35 @@ fun RegisterScreen (
             )
 
             Button(
-                onClick = {  },
+                onClick = {
+                    isLoading = true
+                    viewModel.signup(email, password, username, fullname, nohp)
+                },
                 colors = ButtonDefaults.buttonColors(DullPink),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 35.dp, vertical = 10.dp),
             ) {
-                Text(text = "Sign Up", fontFamily = poppinsFamily,fontSize = 20.sp)
+                if (isLoading) {
+                    CircularProgressIndicator(color = Color.White)
+                } else {
+                    Text(text = "Sign Up", fontFamily = poppinsFamily, fontSize = 20.sp)
+                }
             }
+
+
+            if (apiState is ApiResponse.Error) {
+                Snackbar(
+                    modifier = Modifier.padding(16.dp),
+                    text = "error Register"
+                )
+            } else if (apiState is ApiResponse.Success && !isLoading) {
+                // Panggil callback jika pendaftaran berhasil
+                isLoading = false
+                onRegistrationSuccess.invoke()
+            }
+
+            //firebase
             Row(modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 10.dp),
@@ -240,10 +286,16 @@ fun RegisterScreen (
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun DisadaAppPreview() {
-    DisadaAppTheme {
-        RegisterScreen()
-    }
+fun Snackbar(modifier: Modifier, text: String) {
+    Text(text = "error Register")
+
 }
+
+//@Preview(showBackground = true)
+//@Composable
+//fun DisadaAppPreview() {
+//    DisadaAppTheme {
+//        RegisterScreen()
+//    }
+//}

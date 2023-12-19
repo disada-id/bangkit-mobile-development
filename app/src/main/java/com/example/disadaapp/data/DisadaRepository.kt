@@ -5,6 +5,7 @@ import com.example.disadaapp.data.model.AudioData
 import com.example.disadaapp.data.network.ApiResponse
 import com.example.disadaapp.data.network.ApiService
 import com.example.disadaapp.data.respone.PredictResponse
+import com.example.disadaapp.data.respone.PredictsResponse
 import com.example.disadaapp.data.respone.SigninResponse
 import com.example.disadaapp.data.respone.SignupResponse
 import com.google.firebase.auth.AuthCredential
@@ -35,5 +36,5 @@ interface DisadaRepository{
     ): Flow<ApiResponse<SigninResponse>>
 
     //audio
-  suspend  fun postAudio(audioData: AudioData): PredictResponse
+  suspend  fun postAudio(audioData: AudioData): Flow<ApiResponse<PredictsResponse>>
 }

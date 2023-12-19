@@ -225,6 +225,21 @@ fun RegisterScreen (
                 onClick = {
                     isLoading = true
                     viewModel.signup(email, password, username, fullname, nohp)
+                        when (apiState) {
+                            is ApiResponse.Error -> {
+                                isLoading = false
+                            }
+                            is ApiResponse.Success -> {
+                                if (!isLoading) {
+                                    // Panggil callback jika pendaftaran berhasil
+                                    onRegistrationSuccess.invoke()
+                                }
+                                isLoading = false
+                            }
+
+                            else -> {}
+                        }
+
                 },
                 colors = ButtonDefaults.buttonColors(DullPink),
                 modifier = Modifier
@@ -239,16 +254,6 @@ fun RegisterScreen (
             }
 
 
-            if (apiState is ApiResponse.Error) {
-                Snackbar(
-                    modifier = Modifier.padding(16.dp),
-                    text = "error Register"
-                )
-            } else if (apiState is ApiResponse.Success && !isLoading) {
-                // Panggil callback jika pendaftaran berhasil
-                isLoading = false
-                onRegistrationSuccess.invoke()
-            }
 
             //firebase
             Row(modifier = Modifier
@@ -315,6 +320,9 @@ fun RegisterScreen (
         }
     }
 }
+
+
+
 
 @Composable
 fun Snackbar(modifier: Modifier, text: String) {

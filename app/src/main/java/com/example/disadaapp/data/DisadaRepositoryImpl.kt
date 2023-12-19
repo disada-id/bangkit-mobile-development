@@ -5,6 +5,7 @@ import com.example.disadaapp.data.model.AudioData
 import com.example.disadaapp.data.network.ApiResponse
 import com.example.disadaapp.data.network.ApiService
 import com.example.disadaapp.data.respone.PredictResponse
+import com.example.disadaapp.data.respone.PredictsResponse
 import com.example.disadaapp.data.respone.SigninResponse
 import com.example.disadaapp.data.respone.SignupResponse
 import com.google.firebase.auth.AuthCredential
@@ -58,8 +59,13 @@ class DisadaRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun postAudio(audioData: AudioData): PredictResponse {
-        return apiService.postAudio(audioData)
+    override suspend fun postAudio(audioData: AudioData): Flow<ApiResponse<PredictsResponse>> {
+        return flow {
+            val response = apiService.postAudio(audioData)
+            emit(ApiResponse.Success(response))
+        }.catch { e ->
+            ApiResponse.Error(e.message.toString())
+        }
     }
 
 }

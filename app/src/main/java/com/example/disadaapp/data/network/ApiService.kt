@@ -2,6 +2,7 @@ package com.example.disadaapp.data.network
 
 import com.example.disadaapp.data.model.AudioData
 import com.example.disadaapp.data.respone.PredictResponse
+import com.example.disadaapp.data.respone.PredictsResponse
 import com.example.disadaapp.data.respone.SigninResponse
 import com.example.disadaapp.data.respone.SignupResponse
 import retrofit2.http.Body
@@ -28,5 +29,5 @@ interface ApiService {
         ): SignupResponse
 
         @POST("predict")
-        suspend fun postAudio(@Body audioData: AudioData): PredictResponse
+        suspend fun postAudio(@Body audioData: AudioData): PredictsResponse
 }

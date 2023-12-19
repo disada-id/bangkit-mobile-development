@@ -36,13 +36,7 @@ class AuthViewModel @Inject constructor(
     private val _loginState = MutableStateFlow<ApiResponse<SigninResponse>>(ApiResponse.Empty)
     val loginState: StateFlow<ApiResponse<SigninResponse>> = _loginState
 
-   // StateFlow untuk hasil prediksi
-    private val _predictedLabel = MutableStateFlow<String?>(null)
-    val predictedLabel: StateFlow<String?> = _predictedLabel
 
-    // StateFlow untuk probabilities
-    private val _probabilities = MutableStateFlow<PredictionProbabilities?>(null)
-    val probabilities: StateFlow<PredictionProbabilities?> = _probabilities
 
 
     fun googleSignIn(credential: AuthCredential) = viewModelScope.launch {
@@ -88,45 +82,7 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    // audio
 
-    fun predictAudio(audioData: AudioData) {
-        viewModelScope.launch {
-            try {
-                val result = repository.postAudio(audioData)
-                // Proses hasil prediksi sesuai kebutuhan Anda
-                handlePredictionResult(result)
-            } catch (e: Exception) {
-                // Tangani kesalahan selama proses prediksi
-                handlePredictionError(e)
-            }
-        }
-    }
-
-    // Fungsi untuk menangani hasil prediksi
-    private fun handlePredictionResult(result: PredictResponse) {
-        //  hasil prediksi
-        val predictedLabel = result.predictedLabel
-        val probabilities = result.predictionProbabilities
-
-        // Tampilkan hasil prediksi ke konsol
-        println("Hasil Prediksi: $predictedLabel")
-
-        // Set nilai StateFlow predictedLabel
-        _predictedLabel.value = result.predictedLabel
-
-        // Set nilai StateFlow probabilities
-        _probabilities.value = result.predictionProbabilities
-
-
-    }
-
-    // Fungsi untuk menangani kesalahan selama proses prediksi
-    private fun handlePredictionError(error: Throwable) {
-        val errorMessage = "Terjadi kesalahan saat melakukan prediksi: ${error.message}"
-
-        println(errorMessage)
-    }
 
 
 }

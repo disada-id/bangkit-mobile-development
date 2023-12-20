@@ -39,13 +39,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.example.disadaapp.R
+import com.example.disadaapp.Utils.AudioService2
 import com.example.disadaapp.ui.theme.DisadaAppTheme
 
 data class MenuItem(val title: String, val screen: Route, val icon: ImageVector)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyNavDrawer() {
+fun MyNavDrawer(recorder: AudioService2) {
     val navController = rememberNavController()
     val appState = rememberMyNavDrawerState(navController = navController)
 
@@ -81,7 +82,7 @@ fun MyNavDrawer() {
         snackbarHost = { SnackbarHost(appState.snackbarHostState) },
         topBar = {
             MyTopBar(
-                onMenuClick = appState::onMenuClick
+                onMenuClick = appState::onMenuClick,
             )
         },
     ) { paddingValues ->
@@ -111,7 +112,7 @@ fun MyNavDrawer() {
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center,
                 ) {
-                    appState.NavHostContent()
+                    appState.NavHostContent(recorder)
                 }
             }
         )
@@ -166,10 +167,10 @@ fun BackPressHandler(enabled: Boolean = true, onBackPressed: () -> Unit) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    DisadaAppTheme {
-        MyNavDrawer()
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun DefaultPreview() {
+//    DisadaAppTheme {
+//        MyNavDrawer(recorder)
+//    }
+//}

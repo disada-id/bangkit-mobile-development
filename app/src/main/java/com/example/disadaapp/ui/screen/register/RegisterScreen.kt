@@ -124,7 +124,7 @@ fun RegisterScreen (
                 .fillMaxWidth()
                 .verticalScroll(rememberScrollState())) {
             Image(
-                painter = painterResource(R.drawable.logo),
+                painter = painterResource(R.drawable.ic_logo),
                 contentDescription = "logo",
                 modifier = modifier
                     .padding(top = 30.dp, bottom = 20.dp)

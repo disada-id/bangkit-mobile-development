@@ -1,32 +1,26 @@
 package com.example.disadaapp.navigation
 
 import android.content.Context
-import android.widget.Toast
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
-import com.example.disadaapp.R
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import androidx.compose.runtime.remember
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.disadaapp.Utils.AudioService2
 import com.example.disadaapp.ui.screen.homepage.HomeScreen
-import com.example.disadaapp.ui.screen.login.LoginScreen
 import com.example.disadaapp.ui.screen.profile.ProfileScreen
-import com.example.disadaapp.ui.screen.register.RegisterScreen
 import com.example.disadaapp.ui.screen.service.ServiceScreen
 import com.example.disadaapp.ui.screen.timeCapsule.TimeCapsuleScreen
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 class NavState @OptIn(ExperimentalMaterial3Api::class) constructor(
     val drawerState: DrawerState,
@@ -47,12 +41,15 @@ class NavState @OptIn(ExperimentalMaterial3Api::class) constructor(
     }
 
     @Composable
-    fun NavHostContent(){
+    fun NavHostContent(recorder: AudioService2) {
         NavHost(
             navController = navController,
             startDestination = Route.Home.route ){
+//                composable(Route.Splash.route){
+//                    SplashScreen()
+//                }
                 composable(Route.Home.route){
-                    HomeScreen()
+                    HomeScreen(recorder)
                 }
                 composable(Route.Maps.route){
                     ServiceScreen()

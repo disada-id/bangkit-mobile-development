@@ -7,16 +7,13 @@ import com.example.disadaapp.data.model.AudioData
 import com.example.disadaapp.data.network.ApiResponse
 import com.example.disadaapp.data.network.ApiService
 import com.example.disadaapp.data.respone.Kemungkinan
-import com.example.disadaapp.data.respone.PredictResponse
-import com.example.disadaapp.data.respone.PredictionProbabilities
-import com.example.disadaapp.data.respone.PredictsResponse
 import com.example.disadaapp.data.respone.RekomendasiPanganan
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
+import java.io.File
 import javax.inject.Inject
 
 
@@ -36,17 +33,18 @@ class AudioViewModel @Inject constructor(
     val rekomendasiPanganan: StateFlow<RekomendasiPanganan?> = _rekomendasiPanganan
 
     // Fungsi untuk melakukan prediksi berdasarkan audioData
-    fun predictAudio(audioData: AudioData) {
+    fun predictAudio(file: File) {
         viewModelScope.launch {
-            repository.postAudio(audioData)
+            repository.postAudio(file)
                 .onStart {
                     // masih bingung disini ditaruh apa
                 }
                 .collect { apiResponse ->
                     when (apiResponse) {
-                        is ApiResponse.Empty ->{
-                            
+                        is ApiResponse.Empty -> {
+
                         }
+
                         is ApiResponse.Success -> {
                             // Mengupdate StateFlow sesuai dengan respons API
                             _hasil.value = apiResponse.data?.hasil
@@ -54,11 +52,15 @@ class AudioViewModel @Inject constructor(
                             _rekomendasiPanganan.value = apiResponse.data?.rekomendasiPanganan
 
                         }
+
                         is ApiResponse.Error -> {
                             // Menangani kesalahan jika diperlukan
                         }
                     }
                 }
+
         }
     }
+
+    suspend fun postAudio(file: File) = repository.postAudio(file)
 }

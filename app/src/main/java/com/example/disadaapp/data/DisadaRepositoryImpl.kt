@@ -4,14 +4,12 @@ import com.example.disadaapp.UiState
 import com.example.disadaapp.data.model.AudioData
 import com.example.disadaapp.data.network.ApiResponse
 import com.example.disadaapp.data.network.ApiService
-import com.example.disadaapp.data.respone.PredictResponse
 import com.example.disadaapp.data.respone.PredictsResponse
 import com.example.disadaapp.data.respone.SigninResponse
 import com.example.disadaapp.data.respone.SignupResponse
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
-import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow

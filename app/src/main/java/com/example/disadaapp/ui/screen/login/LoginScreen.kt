@@ -108,7 +108,7 @@ fun LoginScreen(
         ) {
             //display logo
             Image(
-                painter = painterResource(id = R.drawable.logo) ,
+                painter = painterResource(id = R.drawable.ic_logo),
                 contentDescription = "Disada logo",
                 modifier = Modifier
                     .size(200.dp)

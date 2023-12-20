@@ -7,12 +7,8 @@ import com.example.disadaapp.data.model.AudioData
 import com.example.disadaapp.data.network.ApiResponse
 import com.example.disadaapp.data.network.ApiService
 import com.example.disadaapp.data.respone.Kemungkinan
-import com.example.disadaapp.data.respone.PredictResponse
-import com.example.disadaapp.data.respone.PredictionProbabilities
-import com.example.disadaapp.data.respone.PredictsResponse
 import com.example.disadaapp.data.respone.RekomendasiPanganan
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.onStart
@@ -44,9 +40,10 @@ class AudioViewModel @Inject constructor(
                 }
                 .collect { apiResponse ->
                     when (apiResponse) {
-                        is ApiResponse.Empty ->{
-                            
+                        is ApiResponse.Empty -> {
+
                         }
+
                         is ApiResponse.Success -> {
                             // Mengupdate StateFlow sesuai dengan respons API
                             _hasil.value = apiResponse.data?.hasil
@@ -54,11 +51,13 @@ class AudioViewModel @Inject constructor(
                             _rekomendasiPanganan.value = apiResponse.data?.rekomendasiPanganan
 
                         }
+
                         is ApiResponse.Error -> {
                             // Menangani kesalahan jika diperlukan
                         }
                     }
                 }
+
         }
     }
 }

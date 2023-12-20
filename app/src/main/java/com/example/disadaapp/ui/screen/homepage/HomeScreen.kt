@@ -21,6 +21,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.disadaapp.Utils.AudioViewModel
+import com.example.disadaapp.data.model.AudioData
 import com.example.disadaapp.ui.Component.ButtonCustomRecord
 import com.example.disadaapp.ui.Component.CardCustom
 import com.example.disadaapp.ui.Component.PredictCard
@@ -33,6 +36,7 @@ import com.example.disadaapp.ui.theme.LightOrange
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
+    viewModel: AudioViewModel = hiltViewModel()
 ) {
     Surface(
         modifier = Modifier
@@ -49,7 +53,9 @@ fun HomeScreen(
             }
             Spacer(modifier = modifier.height(10.dp))
             ButtonCustomRecord(
-                onClick = { /*TODO*/ })
+                onClick = {
+                        viewModel.predictAudio(audioData = AudioData(ByteArray(10)))
+                })
         }
     }
 }

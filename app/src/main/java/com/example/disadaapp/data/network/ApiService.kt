@@ -28,6 +28,7 @@ interface ApiService {
             @Field("nohp") nohp : String
         ): SignupResponse
 
+
         @POST("predict")
         suspend fun postAudio(@Body audioData: AudioData): PredictsResponse
 }

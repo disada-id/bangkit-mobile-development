@@ -1,5 +1,6 @@
 package com.example.disadaapp.ui.Component
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,35 +20,49 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.disadaapp.Utils.AudioViewModel
 import com.example.disadaapp.ui.theme.DisadaAppTheme
-import com.example.disadaapp.ui.theme.DullPink
 import com.example.disadaapp.ui.theme.GrayBlue
 import com.example.disadaapp.ui.theme.Pink80
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun CardCustom(
     modifier: Modifier = Modifier,
+    viewModel: AudioViewModel = hiltViewModel(),
+    recomValue: String,
+    expValue: String,
+    value1: Double,
+    value2: Double,
+    value3: Double,
+    value4: Double,
+    value5: Double
     ) {
+    viewModel.kemungkinan.value?.merasaKesakitan.toString()
     val scroll = rememberScrollState(0)
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(400.dp)
-            .padding(10.dp),
+            .height(400.dp),
+//            .padding(horizontal = 40.dp, vertical = 10.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         shape = MaterialTheme.shapes.medium,
         colors = CardDefaults.cardColors(GrayBlue),
     ) {
-        PredictCard()
+        PredictCard(value1 = value1, value2 = value2, value3 = value3, value4 = value4, value5 = value5)
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(10.dp)
         ) {
-            Text( text = "Recommendation Result kdjhfaisfhsoifwfhowiefhdsaoffffffffcdniudaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaannnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnggggggggggggggggggggggggggggggggggggggggggggggggrrrrrrrrrrrrrrrrrrrrrrrrrrrrrwwwwwwwwwwwwwwwwwwwwwwwww",
+            Text( text = recomValue,
+                color = Color.Black,
+                modifier = Modifier.verticalScroll(scroll)
+            )
+            Text( text = expValue,
                 color = Color.Black,
                 modifier = Modifier.verticalScroll(scroll)
             )
@@ -57,12 +72,18 @@ fun CardCustom(
 
 @Composable
 fun PredictCard(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    value1: Double,
+    value2: Double,
+    value3: Double,
+    value4: Double,
+    value5: Double,
 ) {
     Card(modifier = Modifier
         .clip(MaterialTheme.shapes.medium)
         .fillMaxWidth()
         .height(180.dp),
+        //.padding(horizontal = 40.dp, vertical = 10.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         colors = CardDefaults.cardColors(Pink80))
     {
@@ -87,7 +108,7 @@ fun PredictCard(
                         Color(0xFFCA6363)
                     )
                 ),
-                percent = 20,
+                percent = value1.toInt(),
                 isTextShown = true
             )
 
@@ -108,7 +129,7 @@ fun PredictCard(
                         Color(0xFFCA6363)
                     )
                 ),
-                percent = 20,
+                percent = value2.toInt(),
                 isTextShown = true
             )
 
@@ -129,7 +150,7 @@ fun PredictCard(
                         Color(0xFFCA6363)
                     )
                 ),
-                percent = 20,
+                percent = value3.toInt(),
                 isTextShown = true
             )
 
@@ -150,7 +171,7 @@ fun PredictCard(
                         Color(0xFFCA6363)
                     )
                 ),
-                percent = 20,
+                percent = value4.toInt(),
                 isTextShown = true
             )
 
@@ -171,7 +192,7 @@ fun PredictCard(
                         Color(0xFFCA6363)
                     )
                 ),
-                percent = 20,
+                percent = value5.toInt(),
                 isTextShown = true
             )
         }
@@ -182,6 +203,14 @@ fun PredictCard(
 @Composable
 fun Preview() {
     DisadaAppTheme {
-        CardCustom()
+        CardCustom(
+            expValue = "",
+            recomValue = "",
+            value1 = 0.323,
+            value2 = 0.44,
+            value3 = 0.9099,
+            value4 = 0.76,
+            value5 = 0.89
+        )
     }
 }

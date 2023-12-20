@@ -1,5 +1,6 @@
 package com.example.disadaapp.ui.screen.homepage
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,17 +34,33 @@ import com.example.disadaapp.ui.Component.CardCustom
 import java.io.File
 
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun HomeScreen(
     recorder: AudioService2,
     modifier: Modifier = Modifier,
     viewModel: AudioViewModel = hiltViewModel()
 ) {
+    var resultRecommended by remember { mutableStateOf("") }
+    var resultExplaination by remember { mutableStateOf("") }
+
+    var probabilities1 by remember { mutableStateOf("") }
+    var probabilities2 by remember { mutableStateOf("") }
+    var probabilities3 by remember { mutableStateOf("") }
+    var probabilities4 by remember { mutableStateOf("") }
+    var probabilities5 by remember { mutableStateOf("") }
+
     var audioFile: File? = null
     val cacheDir = LocalContext.current.cacheDir
     val mediaRecorder by remember { mutableStateOf<AudioService?>(null) }
     val playerRecorder by remember { mutableStateOf<AudioService?>(null) }
     var isRecording by remember { mutableStateOf(false) }
+
+    probabilities1 = viewModel.kemungkinan.value?.merasaKesakitan.hashCode().toString()
+    probabilities2 = viewModel.kemungkinan.value?.merasaKurangNyaman.hashCode().toString()
+    probabilities3 = viewModel.kemungkinan.value?.sedangLapar.hashCode().toString()
+    probabilities4 = viewModel.kemungkinan.value?.sedangLelah.hashCode().toString()
+    probabilities5 = viewModel.kemungkinan.value?.sedangMerasaKembung.hashCode().toString()
 
     Surface(
         modifier = Modifier
@@ -55,7 +72,16 @@ fun HomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Box {
-                CardCustom(modifier = modifier)
+                CardCustom(
+                    modifier = modifier,
+                    recomValue = resultRecommended,
+                    expValue = resultExplaination,
+                    value1 = probabilities1.toDouble(),
+                    value2 = probabilities2.toDouble(),
+                    value3 = probabilities3.toDouble(),
+                    value4 = probabilities4.toDouble(),
+                    value5 = probabilities5.toDouble(),
+                )
             }
             Spacer(modifier = modifier.height(5.dp))
 

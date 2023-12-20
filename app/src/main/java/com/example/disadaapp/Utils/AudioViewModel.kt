@@ -56,6 +56,8 @@ class AudioViewModel @Inject constructor(
                         is ApiResponse.Error -> {
                             // Menangani kesalahan jika diperlukan
                         }
+
+                        else -> {}
                     }
                 }
 

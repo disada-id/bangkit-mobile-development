@@ -10,7 +10,7 @@ import androidx.core.net.toUri
 import java.io.File
 import java.io.FileOutputStream
 
-abstract class AudioService(private val context: Context) {
+class AudioService(private val context: Context) {
 
     private var mediaPlayer: MediaPlayer? = null
     private var mediaRecorder: MediaRecorder? = null
@@ -76,8 +76,8 @@ abstract class AudioService(private val context: Context) {
     fun play(file: File) {
         MediaPlayer.create(context, file.toUri()).apply {
             mediaPlayer = this
-            mediaPlayer?.start()
-        }
+            start()
+        } ?: Log.e("AUDIORECORDER", "Error creating MediaPlayer")
     }
     fun stop() {
         mediaPlayer?.stop()

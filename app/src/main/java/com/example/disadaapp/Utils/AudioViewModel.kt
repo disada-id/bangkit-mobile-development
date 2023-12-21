@@ -1,5 +1,6 @@
 package com.example.disadaapp.Utils
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.disadaapp.data.DisadaRepository
@@ -35,9 +36,11 @@ class AudioViewModel @Inject constructor(
     // Fungsi untuk melakukan prediksi berdasarkan audioData
     fun predictAudio(file: File) {
         viewModelScope.launch {
+            Log.d("YourViewModel", "Mengirim file audio ke API: ${file.absolutePath}")
             repository.postAudio(file)
                 .onStart {
                     // masih bingung disini ditaruh apa
+                    Log.d("YourViewModel", "Permintaan API dimulai.")
                 }
                 .collect { apiResponse ->
                     when (apiResponse) {
@@ -51,18 +54,26 @@ class AudioViewModel @Inject constructor(
                             _kemungkinan.value = apiResponse.data?.kemungkinan
                             _rekomendasiPanganan.value = apiResponse.data?.rekomendasiPanganan
 
+                            Log.d("YourViewModel", "Hasil prediksi diterima dari API.")
+
                         }
 
                         is ApiResponse.Error -> {
                             // Menangani kesalahan jika diperlukan
+                            Log.e("YourViewModel", "Kesalahan dari API: ${apiResponse.errorMessage}")
+
                         }
 
-                        else -> {}
+                        else -> {
+
+                        }
                     }
                 }
 
         }
     }
 
-    suspend fun postAudio(file: File) = repository.postAudio(file)
+     suspend fun getAudio(kemungkinan: Kemungkinan, rekomendasiPanganan: RekomendasiPanganan, hasil: String){
+         repository.getAudioResponse(kemungkinan, rekomendasiPanganan, hasil)
+    }
 }

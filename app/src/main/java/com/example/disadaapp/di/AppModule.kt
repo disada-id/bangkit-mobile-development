@@ -9,6 +9,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -30,9 +32,16 @@ object AppModule {
     @Provides
     @Singleton
     fun provideApiService(): ApiService {
+        val loggingInterceptor =
+            HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+        val client = OkHttpClient.Builder()
+            .addInterceptor(loggingInterceptor)
+            .build()
+
         return Retrofit.Builder()
-            .baseUrl("https://disada-backend-cc-ctlb7v5egq-et.a.run.app/auth/")
+            .baseUrl("https://disada-flask-service-ctlb7v5egq-et.a.run.app/")
             .addConverterFactory(GsonConverterFactory.create())
+            .client(client)
             .build()
             .create(ApiService::class.java)
     }

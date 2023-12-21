@@ -3,7 +3,9 @@ package com.example.disadaapp.data
 import com.example.disadaapp.UiState
 import com.example.disadaapp.data.model.AudioData
 import com.example.disadaapp.data.network.ApiResponse
+import com.example.disadaapp.data.respone.Kemungkinan
 import com.example.disadaapp.data.respone.PredictsResponse
+import com.example.disadaapp.data.respone.RekomendasiPanganan
 import com.example.disadaapp.data.respone.SigninResponse
 import com.example.disadaapp.data.respone.SignupResponse
 import com.google.firebase.auth.AuthCredential
@@ -36,4 +38,8 @@ interface DisadaRepository{
 
     //audio
   suspend  fun postAudio(audioFile: File): Flow<ApiResponse<PredictsResponse>>
+
+  //get
+  suspend fun getAudioResponse(kemungkinan: Kemungkinan, rekomendasiPanganan: RekomendasiPanganan, hasil: String): PredictsResponse
+
 }

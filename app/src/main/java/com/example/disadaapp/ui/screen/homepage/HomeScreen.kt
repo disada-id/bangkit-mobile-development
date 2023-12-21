@@ -1,6 +1,7 @@
 package com.example.disadaapp.ui.screen.homepage
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,6 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,6 +31,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.disadaapp.Utils.AudioService
 import com.example.disadaapp.Utils.AudioService2
 import com.example.disadaapp.Utils.AudioViewModel
+import com.example.disadaapp.data.respone.Kemungkinan
 import com.example.disadaapp.ui.Component.ButtonCustomRecord
 import com.example.disadaapp.ui.Component.CardCustom
 import java.io.File
@@ -56,11 +59,22 @@ fun HomeScreen(
     val playerRecorder by remember { mutableStateOf<AudioService?>(null) }
     var isRecording by remember { mutableStateOf(false) }
 
-    probabilities1 = viewModel.kemungkinan.value?.merasaKesakitan.hashCode().toString()
+    // State untuk menyimpan hasil dari permintaan POST
+    var hasilPredictAudio by remember { mutableStateOf<String?>(null) }
+
+
+    val kemungkinan = viewModel.kemungkinan.value ?: Kemungkinan() // Ganti dengan cara mendapatkan data sesuai kebutuhan
+
+    probabilities1 = kemungkinan.merasaKesakitan.hashCode().toString()
     probabilities2 = viewModel.kemungkinan.value?.merasaKurangNyaman.hashCode().toString()
     probabilities3 = viewModel.kemungkinan.value?.sedangLapar.hashCode().toString()
     probabilities4 = viewModel.kemungkinan.value?.sedangLelah.hashCode().toString()
     probabilities5 = viewModel.kemungkinan.value?.sedangMerasaKembung.hashCode().toString()
+//
+//    LaunchedEffect(kemungkinan) {
+//        hasilPredictAudio = viewModel.hasil.value
+//    }
+
 
     Surface(
         modifier = Modifier
@@ -102,14 +116,17 @@ fun HomeScreen(
                         recorder.stopRecorder()
 //                        mediaRecorder?.stopRecorder()
                         isRecording = false
+                        Log.d("AudioRecording", "Perekaman selesai. Menghentikan perekaman.")
+
                     } else {
                         // Memulai perekaman jika tidak sedang merekam
-                        File(cacheDir, "audio.wav").also {
+                        File(cacheDir, "temp_audio.wav").also {
                             recorder.startRecorder(it)
 //                            mediaRecorder?.startRecorder(it)
                             audioFile = it
                             isRecording = true
                             viewModel.predictAudio(audioFile!!)
+                            Log.d("AudioRecording", "Memulai perekaman. File: ${it.absolutePath}")
 
                         }
                     }

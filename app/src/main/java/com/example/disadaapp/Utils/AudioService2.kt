@@ -31,8 +31,9 @@ class AudioService2(private val context: Context) {
             setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
             setMaxDuration(7000) // max duration 7 seconds
             setOutputFile(FileOutputStream(outputFile).fd)
-            setAudioEncodingBitRate(16 * 44100)
-            setAudioSamplingRate(96000)
+            setAudioEncodingBitRate(3442 * 1000) // Change this line
+            setAudioSamplingRate(8000)
+
 
             setOnInfoListener { mr, what, extra ->
                 if (what == MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED) {
@@ -54,7 +55,6 @@ class AudioService2(private val context: Context) {
                     start()
                 }
                 mediaRecorder = this
-                Toast.makeText(context, "Start Recording...", Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 Log.e("AUDIORECORDER", "Error preparing or starting recording: ${e}")
                 // Handle the exception as needed

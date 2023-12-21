@@ -65,7 +65,9 @@ class DisadaRepositoryImpl @Inject constructor(
 
     override suspend fun postAudio(audioFile: File): Flow<ApiResponse<PredictsResponse>> {
         return flow {
-            val requestAudioFile = audioFile.asRequestBody("temp_audio/wav".toMediaType())
+//            val requestAudioFile = audioFile.asRequestBody("temp_audio/wav".toMediaType())
+            val requestAudioFile = audioFile.asRequestBody("audio/wav".toMediaType())
+
             val multipartBody = MultipartBody.Part.createFormData(
                     "file",
                     audioFile.name,

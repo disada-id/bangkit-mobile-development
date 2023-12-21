@@ -1,5 +1,7 @@
 package com.example.disadaapp.di
 
+import android.content.Context
+import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.example.disadaapp.data.DisadaRepository
 import com.example.disadaapp.data.DisadaRepositoryImpl
 import com.example.disadaapp.data.network.ApiConfig
@@ -8,6 +10,7 @@ import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -31,11 +34,12 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideApiService(): ApiService {
+    fun provideApiService(@ApplicationContext context: Context): ApiService {
         val loggingInterceptor =
             HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
         val client = OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
+            .addInterceptor(ChuckerInterceptor(context))
             .build()
         return Retrofit.Builder()
 //            .baseUrl("https://disada-backend-cc-ctlb7v5egq-et.a.run.app/auth/")

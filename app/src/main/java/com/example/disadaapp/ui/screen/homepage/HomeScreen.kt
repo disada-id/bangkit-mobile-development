@@ -185,7 +185,7 @@ fun HomeScreen(
                         isRecording = false
                     } else {
                         // Memulai perekaman jika tidak sedang merekam
-                        File(cacheDir, "audio.wav").also {
+                        File(cacheDir, "temp_audio.wav").also {
                             recorder.startRecorder(it)
 //                            mediaRecorder?.startRecorder(it)
                             audioFile = it

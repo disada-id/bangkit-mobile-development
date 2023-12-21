@@ -29,7 +29,7 @@ class AudioService2(private val context: Context) {
             setAudioSource(MediaRecorder.AudioSource.MIC)
             setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
             setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
-            setMaxDuration(7000) // max duration 7 seconds
+            setMaxDuration(5000) // max duration 7 seconds
             setOutputFile(FileOutputStream(outputFile).fd)
             setAudioEncodingBitRate(3442 * 1000) // Change this line
             setAudioSamplingRate(8000)
@@ -56,7 +56,7 @@ class AudioService2(private val context: Context) {
                 }
                 mediaRecorder = this
             } catch (e: Exception) {
-                Log.e("AUDIORECORDER", "Error preparing or starting recording: ${e}")
+                Log.e("AUDIORECORDER", "Error preparing or starting recording: ${e.message}")
                 // Handle the exception as needed
             }
 

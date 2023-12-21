@@ -56,7 +56,7 @@ class AudioService2(private val context: Context) {
                 mediaRecorder = this
                 Toast.makeText(context, "Start Recording...", Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
-                Log.e("AUDIORECORDER", "Error preparing or starting recording: ${e}")
+                Log.e("AUDIORECORDER", "Error preparing or starting recording: ${e.message}")
                 // Handle the exception as needed
             }
 

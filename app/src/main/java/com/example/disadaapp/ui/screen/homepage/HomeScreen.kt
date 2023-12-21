@@ -14,6 +14,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,11 +28,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.disadaapp.UiState
 import com.example.disadaapp.Utils.AudioService
 import com.example.disadaapp.Utils.AudioService2
 import com.example.disadaapp.Utils.AudioViewModel
+import com.example.disadaapp.data.respone.Kemungkinan
 import com.example.disadaapp.ui.Component.ButtonCustomRecord
 import com.example.disadaapp.ui.Component.CardCustom
+import com.example.disadaapp.ui.Component.PredictCard
+import com.example.disadaapp.ui.Component.resultCard
 import java.io.File
 
 
@@ -41,6 +47,8 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: AudioViewModel = hiltViewModel()
 ) {
+    var result by remember { mutableStateOf("") }
+
     var resultRecommended by remember { mutableStateOf("") }
     var resultExplaination by remember { mutableStateOf("") }
 
@@ -55,6 +63,74 @@ fun HomeScreen(
     val mediaRecorder by remember { mutableStateOf<AudioService?>(null) }
     val playerRecorder by remember { mutableStateOf<AudioService?>(null) }
     var isRecording by remember { mutableStateOf(false) }
+    
+    viewModel.hasil.collectAsState(initial = UiState.Loading).value.let { 
+        when(it) {
+            is UiState.Loading -> {
+                
+            }
+            is UiState.Success<*> -> {
+                CardCustom(
+                    value1 = probabilities1.toInt(),
+                    value2 = probabilities2.toInt(),
+                    value3 = probabilities3.toInt(),
+                    value4 = probabilities4.toInt(),
+                    value5 = probabilities5.toInt(),
+                    recomValue = resultRecommended,
+                    expValue = resultExplaination,
+                    result = result
+                )
+            }
+            is UiState.Error -> {
+                
+            }
+        }
+    }
+
+    viewModel.kemungkinan.collectAsState(initial = UiState.Loading).value.let {
+        when(it) {
+            is UiState.Loading -> {
+                //ButtonCustomRecord(onClick = { audioFile?.let { it1 -> viewModel.predictAudio(it1) } }, modifier = modifier)
+            }
+            is UiState.Success<*> -> {
+                PredictCard(
+                    value1 = probabilities1.toInt(),
+                    value2 = probabilities2.toInt(),
+                    value3 = probabilities3.toInt(),
+                    value4 = probabilities4.toInt(),
+                    value5 = probabilities5.toInt(),
+                )
+            }
+            is UiState.Error -> {
+
+            }
+        }
+    }
+
+    viewModel.rekomendasiPanganan.collectAsState(initial = UiState.Loading).value.let {
+        when(it) {
+            is UiState.Loading -> {
+                //viewModel.predictAudio(audioFile!!)
+
+            }
+            is UiState.Success<*> -> {
+                CardCustom(
+                    recomValue = resultRecommended,
+                    expValue = resultExplaination,
+                    value1 = probabilities1.toInt(),
+                    value2 = probabilities2.toInt(),
+                    value3 = probabilities3.toInt(),
+                    value4 = probabilities4.toInt(),
+                    value5 = probabilities5.toInt(),
+                    result = result
+
+                )
+            }
+            is UiState.Error -> {
+
+            }
+        }
+    }
 
     probabilities1 = viewModel.kemungkinan.value?.merasaKesakitan.hashCode().toString()
     probabilities2 = viewModel.kemungkinan.value?.merasaKurangNyaman.hashCode().toString()
@@ -62,6 +138,10 @@ fun HomeScreen(
     probabilities4 = viewModel.kemungkinan.value?.sedangLelah.hashCode().toString()
     probabilities5 = viewModel.kemungkinan.value?.sedangMerasaKembung.hashCode().toString()
 
+    resultRecommended = viewModel.rekomendasiPanganan.value?.rekomendasi.toString()
+    resultExplaination = viewModel.rekomendasiPanganan.value?.penjelasan.toString()
+
+    result = viewModel.hasil.value.toString()
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -76,11 +156,12 @@ fun HomeScreen(
                     modifier = modifier,
                     recomValue = resultRecommended,
                     expValue = resultExplaination,
-                    value1 = probabilities1.toDouble(),
-                    value2 = probabilities2.toDouble(),
-                    value3 = probabilities3.toDouble(),
-                    value4 = probabilities4.toDouble(),
-                    value5 = probabilities5.toDouble(),
+                    value1 = probabilities1.toDouble().toInt(),
+                    value2 = probabilities2.toDouble().toInt(),
+                    value3 = probabilities3.toDouble().toInt(),
+                    value4 = probabilities4.toDouble().toInt(),
+                    value5 = probabilities5.toDouble().toInt(),
+                    result = result
                 )
             }
             Spacer(modifier = modifier.height(5.dp))
@@ -135,4 +216,5 @@ fun HomeScreen(
             }
         }
     }
+
 }

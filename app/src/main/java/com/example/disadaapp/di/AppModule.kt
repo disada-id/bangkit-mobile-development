@@ -31,7 +31,8 @@ object AppModule {
     @Singleton
     fun provideApiService(): ApiService {
         return Retrofit.Builder()
-            .baseUrl("https://disada-backend-cc-ctlb7v5egq-et.a.run.app/auth/")
+//            .baseUrl("https://disada-backend-cc-ctlb7v5egq-et.a.run.app/auth/")
+            .baseUrl("https://disada-flask-service-ctlb7v5egq-et.a.run.app/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(ApiService::class.java)

@@ -2,10 +2,13 @@ package com.example.disadaapp.ui.Component
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -20,6 +23,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -28,6 +32,7 @@ import com.example.disadaapp.Utils.AudioViewModel
 import com.example.disadaapp.ui.theme.DisadaAppTheme
 import com.example.disadaapp.ui.theme.GrayBlue
 import com.example.disadaapp.ui.theme.Pink80
+import com.example.disadaapp.ui.theme.poppinsFamily
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
@@ -36,36 +41,58 @@ fun CardCustom(
     viewModel: AudioViewModel = hiltViewModel(),
     recomValue: String,
     expValue: String,
-    value1: Double,
-    value2: Double,
-    value3: Double,
-    value4: Double,
-    value5: Double
+    result: String,
+    value1: Int,
+    value2: Int,
+    value3: Int,
+    value4: Int,
+    value5: Int,
     ) {
-    viewModel.kemungkinan.value?.merasaKesakitan.toString()
     val scroll = rememberScrollState(0)
+    val listState = rememberLazyListState()
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .height(400.dp),
-//            .padding(horizontal = 40.dp, vertical = 10.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         shape = MaterialTheme.shapes.medium,
         colors = CardDefaults.cardColors(GrayBlue),
     ) {
-        PredictCard(value1 = value1, value2 = value2, value3 = value3, value4 = value4, value5 = value5)
+        PredictCard(
+            modifier = Modifier.verticalScroll(scroll),
+            value1 = value1, value2 = value2, value3 = value3, value4 = value4, value5 = value5,
+        )
+        Box(
+            contentAlignment = Alignment.TopCenter
+        ) {
+            Text(
+                modifier = Modifier.padding(10.dp),
+                text = result,
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold,
+                fontSize = 15.sp,
+                fontFamily = poppinsFamily
+            )
+        }
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(10.dp)
+            modifier = Modifier
+                .padding(10.dp)
         ) {
-            Text( text = recomValue,
-                color = Color.Black,
-                modifier = Modifier.verticalScroll(scroll)
-            )
-            Text( text = expValue,
-                color = Color.Black,
-                modifier = Modifier.verticalScroll(scroll)
-            )
+            LazyColumn(state = listState) {
+                item{
+                    Text(
+                        text = recomValue,
+                        color = Color.Black,
+                        fontFamily = poppinsFamily,)
+                }
+                item{
+                    Text(text = expValue,
+                        color = Color.Black,
+                        fontFamily = poppinsFamily)
+                }
+            }
         }
     }
 }
@@ -73,35 +100,37 @@ fun CardCustom(
 @Composable
 fun PredictCard(
     modifier: Modifier = Modifier,
-    value1: Double,
-    value2: Double,
-    value3: Double,
-    value4: Double,
-    value5: Double,
+    value1: Int,
+    value2: Int,
+    value3: Int,
+    value4: Int,
+    value5: Int,
 ) {
     Card(modifier = Modifier
         .clip(MaterialTheme.shapes.medium)
         .fillMaxWidth()
         .height(180.dp),
-        //.padding(horizontal = 40.dp, vertical = 10.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         colors = CardDefaults.cardColors(Pink80))
     {
         Column(
             verticalArrangement = Arrangement.spacedBy(3.dp),
-            modifier = Modifier.padding(10.dp)
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(horizontal = 30.dp, vertical = 10.dp),
+
         ) {
             Text(
                 text = "Bayi Merasa Kesakitan",
                 fontSize = 10.sp,
                 fontWeight = FontWeight.Bold,
+                fontFamily = poppinsFamily,
             )
             ProgressBarCustom(
                 modifier = Modifier
                     .clip(RoundedCornerShape(10.dp))
                     .height(11.dp),
-                width = 300.dp,
-                backgroundColor = Color.Gray,
+                width = 350.dp,
+                backgroundColor = Color.White,
                 foregroundColor = Brush.horizontalGradient(
                     listOf(
                         Color(0xFFCC3C3C),
@@ -116,13 +145,14 @@ fun PredictCard(
                 text = "Bayi Sedang Lapar",
                 fontSize = 10.sp,
                 fontWeight = FontWeight.Bold,
+                fontFamily = poppinsFamily,
             )
             ProgressBarCustom(
                 modifier = Modifier
                     .clip(RoundedCornerShape(10.dp))
                     .height(11.dp),
-                width = 300.dp,
-                backgroundColor = Color.Gray,
+                width = 350.dp,
+                backgroundColor = Color.White,
                 foregroundColor = Brush.horizontalGradient(
                     listOf(
                         Color(0xFFCC3C3C),
@@ -137,13 +167,14 @@ fun PredictCard(
                 text = "Bayi Sedang Lelah",
                 fontSize = 10.sp,
                 fontWeight = FontWeight.Bold,
+                fontFamily = poppinsFamily,
             )
             ProgressBarCustom(
                 modifier = Modifier
                     .clip(RoundedCornerShape(10.dp))
                     .height(11.dp),
-                width = 300.dp,
-                backgroundColor = Color.Gray,
+                width = 350.dp,
+                backgroundColor = Color.White,
                 foregroundColor = Brush.horizontalGradient(
                     listOf(
                         Color(0xFFCC3C3C),
@@ -158,13 +189,14 @@ fun PredictCard(
                 text = "Bayi Sedang Merasa Kembung",
                 fontSize = 10.sp,
                 fontWeight = FontWeight.Bold,
+                fontFamily = poppinsFamily,
             )
             ProgressBarCustom(
                 modifier = Modifier
                     .clip(RoundedCornerShape(10.dp))
                     .height(11.dp),
-                width = 300.dp,
-                backgroundColor = Color.Gray,
+                width = 350.dp,
+                backgroundColor = Color.White,
                 foregroundColor = Brush.horizontalGradient(
                     listOf(
                         Color(0xFFCC3C3C),
@@ -179,13 +211,14 @@ fun PredictCard(
                 text = "Bayi Merasa Kurang Nyaman",
                 fontSize = 10.sp,
                 fontWeight = FontWeight.Bold,
+                fontFamily = poppinsFamily,
             )
             ProgressBarCustom(
                 modifier = Modifier
                     .clip(RoundedCornerShape(10.dp))
                     .height(11.dp),
-                width = 300.dp,
-                backgroundColor = Color.Gray,
+                width = 350.dp,
+                backgroundColor = Color.White,
                 foregroundColor = Brush.horizontalGradient(
                     listOf(
                         Color(0xFFCC3C3C),
@@ -193,10 +226,19 @@ fun PredictCard(
                     )
                 ),
                 percent = value5.toInt(),
-                isTextShown = true
+                isTextShown = true,
             )
+            
         }
     }
+}
+
+@Composable
+fun resultCard(
+    modifier: Modifier = Modifier,
+    hasil: String
+) {
+    Text(text = hasil)
 }
 
 @Preview(showBackground = true)
@@ -204,13 +246,14 @@ fun PredictCard(
 fun Preview() {
     DisadaAppTheme {
         CardCustom(
+            value1 = 89,
+            value2 = 44,
+            value3 = 9099,
+            value4 = 76,
+            value5 = 89,
             expValue = "",
             recomValue = "",
-            value1 = 0.323,
-            value2 = 0.44,
-            value3 = 0.9099,
-            value4 = 0.76,
-            value5 = 0.89
+            result = "",
         )
     }
 }

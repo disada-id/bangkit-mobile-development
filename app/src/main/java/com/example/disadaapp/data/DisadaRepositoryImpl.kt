@@ -67,11 +67,6 @@ class DisadaRepositoryImpl @Inject constructor(
         return flow {
 //            val requestAudioFile = audioFile.asRequestBody("temp_audio/wav".toMediaType())
             val requestAudioFile = audioFile.asRequestBody("audio/wav".toMediaType())
-<<<<<<< HEAD
-
-=======
-//            val requestAudioFile = audioFile.asRequestBody("temp_audio/wav".toMediaType())
->>>>>>> c63b5496e09491a0f6c4005fc20d020d683c2e42
             val multipartBody = MultipartBody.Part.createFormData(
                     "file",
                     audioFile.name,

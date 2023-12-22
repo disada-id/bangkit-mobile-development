@@ -14,7 +14,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,11 +31,12 @@ import com.example.disadaapp.UiState
 import com.example.disadaapp.Utils.AudioService
 import com.example.disadaapp.Utils.AudioService2
 import com.example.disadaapp.Utils.AudioViewModel
-import com.example.disadaapp.data.respone.Kemungkinan
 import com.example.disadaapp.ui.Component.ButtonCustomRecord
 import com.example.disadaapp.ui.Component.CardCustom
 import com.example.disadaapp.ui.Component.PredictCard
-import com.example.disadaapp.ui.Component.resultCard
+import com.example.disadaapp.ui.Component.RecommendedCard
+import com.example.disadaapp.ui.Component.ResultCard
+import com.github.squti.androidwaverecorder.WaveRecorder
 import java.io.File
 
 
@@ -60,6 +60,8 @@ fun HomeScreen(
 
     var audioFile: File? = null
     val cacheDir = LocalContext.current.cacheDir
+    val filePath: String = cacheDir.absolutePath + "/temp_audio.wav"
+    val waveRecorder = WaveRecorder(filePath)
     val mediaRecorder by remember { mutableStateOf<AudioService?>(null) }
     val playerRecorder by remember { mutableStateOf<AudioService?>(null) }
     var isRecording by remember { mutableStateOf(false) }
@@ -70,14 +72,7 @@ fun HomeScreen(
                 
             }
             is UiState.Success<*> -> {
-                CardCustom(
-                    value1 = probabilities1.toInt(),
-                    value2 = probabilities2.toInt(),
-                    value3 = probabilities3.toInt(),
-                    value4 = probabilities4.toInt(),
-                    value5 = probabilities5.toInt(),
-                    recomValue = resultRecommended,
-                    expValue = resultExplaination,
+                ResultCard(
                     result = result
                 )
             }
@@ -114,17 +109,9 @@ fun HomeScreen(
 
             }
             is UiState.Success<*> -> {
-                CardCustom(
+                RecommendedCard(
                     recomValue = resultRecommended,
-                    expValue = resultExplaination,
-                    value1 = probabilities1.toInt(),
-                    value2 = probabilities2.toInt(),
-                    value3 = probabilities3.toInt(),
-                    value4 = probabilities4.toInt(),
-                    value5 = probabilities5.toInt(),
-                    result = result
-
-                )
+                    expValue = resultExplaination)
             }
             is UiState.Error -> {
 
@@ -176,29 +163,55 @@ fun HomeScreen(
                     modifier = Modifier.padding(8.dp)
                 )
             }
-
             ButtonCustomRecord(
                 onClick = {
                     if (isRecording) {
-                        recorder.stopRecorder()
+//                        recorder.stopRecorder()
+                        waveRecorder.stopRecording()
+                        File(cacheDir, "temp_audio.wav").also {
+                            audioFile = it
+                            viewModel.predictAudio(it)
+                        }
 //                        mediaRecorder?.stopRecorder()
                         isRecording = false
                     } else {
                         // Memulai perekaman jika tidak sedang merekam
-                        File(cacheDir, "temp_audio.wav").also {
-                            recorder.startRecorder(it)
-//                            mediaRecorder?.startRecorder(it)
-                            audioFile = it
-                            isRecording = true
-                            viewModel.predictAudio(audioFile!!)
-
-                        }
+                        waveRecorder.startRecording()
+                        isRecording = true
+//                        File(cacheDir, "temp_audio.wav").also {
+//                            recorder.startRecorder(it)
+////                            mediaRecorder?.startRecorder(it)
+//                            audioFile = it
+//                            isRecording = true
+//                            viewModel.predictAudio(audioFile!!)
+//
+//                        }
                     }
                 },
                 modifier = Modifier.background(
-                    if (isRecording) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary
-                )
-            )
+                    if (isRecording) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary))
+//            ButtonCustomRecord(
+//                onClick = {
+//                    if (isRecording) {
+//                        recorder.stopRecorder()
+////                        mediaRecorder?.stopRecorder()
+//                        isRecording = false
+//                    } else {
+//                        // Memulai perekaman jika tidak sedang merekam
+//                        File(cacheDir, "temp_audio.wav").also {
+//                            recorder.startRecorder(it)
+////                            mediaRecorder?.startRecorder(it)
+//                            audioFile = it
+//                            isRecording = true
+//                            viewModel.predictAudio(audioFile!!)
+//
+//                        }
+//                    }
+//                },
+//                modifier = Modifier.background(
+//                    if (isRecording) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary
+//                )
+//            )
 
             Row() {
                 Button(onClick = {

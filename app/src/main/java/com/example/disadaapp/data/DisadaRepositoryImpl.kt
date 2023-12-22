@@ -4,7 +4,9 @@ import com.example.disadaapp.UiState
 import com.example.disadaapp.data.model.AudioData
 import com.example.disadaapp.data.network.ApiResponse
 import com.example.disadaapp.data.network.ApiService
+import com.example.disadaapp.data.respone.Kemungkinan
 import com.example.disadaapp.data.respone.PredictsResponse
+import com.example.disadaapp.data.respone.RekomendasiPanganan
 import com.example.disadaapp.data.respone.SigninResponse
 import com.example.disadaapp.data.respone.SignupResponse
 import com.google.firebase.auth.AuthCredential
@@ -63,8 +65,13 @@ class DisadaRepositoryImpl @Inject constructor(
 
     override suspend fun postAudio(audioFile: File): Flow<ApiResponse<PredictsResponse>> {
         return flow {
-            val requestAudioFile = audioFile.asRequestBody("audio/wav".toMediaType())
 //            val requestAudioFile = audioFile.asRequestBody("temp_audio/wav".toMediaType())
+            val requestAudioFile = audioFile.asRequestBody("audio/wav".toMediaType())
+<<<<<<< HEAD
+
+=======
+//            val requestAudioFile = audioFile.asRequestBody("temp_audio/wav".toMediaType())
+>>>>>>> c63b5496e09491a0f6c4005fc20d020d683c2e42
             val multipartBody = MultipartBody.Part.createFormData(
                     "file",
                     audioFile.name,
@@ -75,6 +82,10 @@ class DisadaRepositoryImpl @Inject constructor(
         }.catch { e ->
             ApiResponse.Error(e.message.toString())
         }
+    }
+
+    override suspend fun getAudioResponse(kemungkinan: Kemungkinan, rekomendasiPanganan: RekomendasiPanganan, hasil: String): PredictsResponse {
+        return apiService.audioRespone(kemungkinan, rekomendasiPanganan, hasil)
     }
 
 }

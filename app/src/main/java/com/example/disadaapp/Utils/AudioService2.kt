@@ -10,10 +10,14 @@ import androidx.core.net.toUri
 import java.io.File
 import java.io.FileOutputStream
 
+
+
+
 class AudioService2(private val context: Context) {
 
     private var mediaPlayer: MediaPlayer? = null
     private var mediaRecorder: MediaRecorder? = null
+
 
     private fun createRecorder(): MediaRecorder {
         return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -29,10 +33,11 @@ class AudioService2(private val context: Context) {
             setAudioSource(MediaRecorder.AudioSource.MIC)
             setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
             setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
-            setMaxDuration(6000) // max duration 7 seconds
-            setOutputFile(FileOutputStream(outputFile).fd)
-            setAudioEncodingBitRate(16 * 44100)
-            setAudioSamplingRate(96000)
+            setMaxDuration(5000) // max duration 7 seconds
+            setOutputFile(FileOutputStream(outputFile.absoluteFile).fd)
+            setAudioEncodingBitRate(3442 * 1000) // Change this line
+            setAudioSamplingRate(8000)
+
 
             setOnInfoListener { mr, what, extra ->
                 if (what == MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED) {
@@ -54,7 +59,6 @@ class AudioService2(private val context: Context) {
                     start()
                 }
                 mediaRecorder = this
-                Toast.makeText(context, "Start Recording...", Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 Log.e("AUDIORECORDER", "Error preparing or starting recording: ${e.message}")
                 // Handle the exception as needed

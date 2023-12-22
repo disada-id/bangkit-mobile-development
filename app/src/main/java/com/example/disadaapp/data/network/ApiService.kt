@@ -1,14 +1,17 @@
 package com.example.disadaapp.data.network
 
 import com.example.disadaapp.data.model.AudioData
+import com.example.disadaapp.data.respone.Kemungkinan
 import com.example.disadaapp.data.respone.PredictResponse
 import com.example.disadaapp.data.respone.PredictsResponse
+import com.example.disadaapp.data.respone.RekomendasiPanganan
 import com.example.disadaapp.data.respone.SigninResponse
 import com.example.disadaapp.data.respone.SignupResponse
 import okhttp3.MultipartBody
 import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
+import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
@@ -34,4 +37,11 @@ interface ApiService {
         @Multipart
         @POST("predict")
         suspend fun postAudio(@Part file: MultipartBody.Part): PredictsResponse
+
+        @GET("predict")
+        suspend fun audioRespone(
+            @Field("kemungkinan") kemungkinan: Kemungkinan,
+            @Field("rekomendasiPanganan") rekomendasiPanganan: RekomendasiPanganan,
+            @Field("Hasil") hasil : String
+        ) : PredictsResponse
 }

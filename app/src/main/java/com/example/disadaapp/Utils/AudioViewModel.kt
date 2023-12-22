@@ -1,19 +1,14 @@
 package com.example.disadaapp.Utils
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.disadaapp.data.DisadaRepository
-import com.example.disadaapp.data.network.ApiResponse
 import com.example.disadaapp.data.network.ApiService
 import com.example.disadaapp.data.respone.Kemungkinan
 import com.example.disadaapp.data.respone.RekomendasiPanganan
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectIndexed
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
@@ -40,11 +35,54 @@ class AudioViewModel @Inject constructor(
             repository.postAudio(file)
                 .collect {
                     _hasil.value = it.toString()
-//                    _kemungkinan.value = it.toString()
-//                    _rekomendasiPanganan.value = it.toString()
+                    _kemungkinan.value?.merasaKesakitan = it.toString()
+                    //_rekomendasiPanganan.value = it.toString()
                 }
         }
     }
+}
+    //untuk mengubah desimal menjadi integer
+    fun calculateKemungkinan(result: Any): Kemungkinan? {
+        return when (result) {
+            is Double -> {
+                // Contoh: Jika tipe data result adalah Double
+                val kemungkinan = result * 100
+                Kemungkinan(
+                    "kesakitan: $kemungkinan%",
+                    "sedangLapar: $kemungkinan%",
+                    "sedangLelah: $kemungkinan%",
+                    "sedangKembung: $kemungkinan%",
+                    "sedangKurangNyaman: $kemungkinan%")
+            }
+            else -> {
+                // Contoh: Tipe data lainnya
+                Kemungkinan("Tipe data tidak dikenali")
+            }
+        }
+    }
+
+//            try {
+//                val result = repository.postAudio(file).first() // Use 'first' to get the first emitted item
+//                _hasil.value = result.toString()
+//                _kemungkinan.value = calculateKemungkinan(result) // You need to implement this function
+//                //_rekomendasiPanganan.value = generateRekomendasiPanganan(result) // You need to implement this function
+//            } catch (e: Exception) {
+//                // Handle exceptions if any
+//                // You might want to set an error state or show a message to the user
+//                _hasil.value = "Error processing audio: ${e.message}"
+//                _kemungkinan.value = ""
+//                _rekomendasiPanganan.value = ""
+
+//    fun predictAudio(file: File) {
+//        viewModelScope.launch {
+//            repository.postAudio(file)
+//                .collect {
+//                    _hasil.value = it.toString()
+//                    _kemungkinan.value =
+//                    _rekomendasiPanganan.value = it.toString()
+//                }
+//        }
+//    }
 //            Log.d("SEND AUDIO", "Success send data")
 //            repository.postAudio(file)
 //                .onStart {
@@ -76,5 +114,4 @@ class AudioViewModel @Inject constructor(
 //                    }
 //                }
 
-    suspend fun postAudio(file: File) = repository.postAudio(file)
-}
+    //suspend fun postAudio(file: File) = repository.postAudio(file)

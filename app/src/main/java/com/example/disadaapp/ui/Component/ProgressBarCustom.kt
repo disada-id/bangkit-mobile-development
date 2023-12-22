@@ -38,14 +38,14 @@ fun ProgressBarCustom(
                 .background(foregroundColor)
                 .width(width * percent / 100)
         ) {
-            Text(
-                text = "$percent%",
-                modifier = Modifier
-                    .align(Alignment.Center),
-                fontSize = 8.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White
-            )
+//            Text(
+//                text = "$percent%",
+//                modifier = Modifier
+//                    .align(Alignment.Center),
+//                fontSize = 8.sp,
+//                fontWeight = FontWeight.Bold,
+//                color = Color.White
+//            )
         }
     }
 }

@@ -29,7 +29,7 @@ class AudioService2(private val context: Context) {
             setAudioSource(MediaRecorder.AudioSource.MIC)
             setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
             setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
-            setMaxDuration(7000) // max duration 7 seconds
+            setMaxDuration(6000) // max duration 7 seconds
             setOutputFile(FileOutputStream(outputFile).fd)
             setAudioEncodingBitRate(16 * 44100)
             setAudioSamplingRate(96000)

@@ -9,9 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -27,8 +25,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.disadaapp.Utils.AudioViewModel
 import com.example.disadaapp.ui.theme.DisadaAppTheme
 import com.example.disadaapp.ui.theme.GrayBlue
 import com.example.disadaapp.ui.theme.Pink80
@@ -38,7 +34,6 @@ import com.example.disadaapp.ui.theme.poppinsFamily
 @Composable
 fun CardCustom(
     modifier: Modifier = Modifier,
-    viewModel: AudioViewModel = hiltViewModel(),
     recomValue: String,
     expValue: String,
     result: String,
@@ -47,10 +42,7 @@ fun CardCustom(
     value3: Int,
     value4: Int,
     value5: Int,
-    ) {
-    val scroll = rememberScrollState(0)
-    val listState = rememberLazyListState()
-
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -60,41 +52,69 @@ fun CardCustom(
         colors = CardDefaults.cardColors(GrayBlue),
     ) {
         PredictCard(
-            modifier = Modifier.verticalScroll(scroll),
+            modifier = Modifier,
             value1 = value1, value2 = value2, value3 = value3, value4 = value4, value5 = value5,
         )
-        Box(
-            contentAlignment = Alignment.TopCenter
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .padding(10.dp)
         ) {
+            Box(
+                contentAlignment = Alignment.TopCenter
+            ) {
+                ResultCard(result = result)
+            }
+            RecommendedCard(
+                recomValue = recomValue,
+                expValue = expValue
+            )
+        }
+    }
+}
+
+@Composable
+fun ResultCard(
+    modifier: Modifier = Modifier,
+    result: String
+) {
+    val listState = rememberLazyListState()
+    LazyColumn(state = listState) {
+        item {
             Text(
                 modifier = Modifier.padding(10.dp),
                 text = result,
+                color = Color.Black,
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,
                 fontSize = 15.sp,
                 fontFamily = poppinsFamily
             )
         }
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .padding(10.dp)
-        ) {
-            LazyColumn(state = listState) {
-                item{
-                    Text(
-                        text = recomValue,
-                        color = Color.Black,
-                        fontFamily = poppinsFamily,)
-                }
-                item{
-                    Text(text = expValue,
-                        color = Color.Black,
-                        fontFamily = poppinsFamily)
-                }
-            }
+    }
+
+}
+
+@Composable
+fun RecommendedCard(
+    recomValue: String,
+    expValue: String,
+) {
+    val listState = rememberLazyListState()
+    LazyColumn(state = listState) {
+        item{
+            Text(
+                text = expValue,
+                color = Color.Black,
+                fontFamily = poppinsFamily,)
+        }
+        item{
+            Text(text = recomValue,
+                color = Color.Black,
+                fontFamily = poppinsFamily)
         }
     }
+
 }
 
 @Composable
@@ -118,127 +138,127 @@ fun PredictCard(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(horizontal = 30.dp, vertical = 10.dp),
 
-        ) {
-            Text(
-                text = "Bayi Merasa Kesakitan",
-                fontSize = 10.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = poppinsFamily,
-            )
-            ProgressBarCustom(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(10.dp))
-                    .height(11.dp),
-                width = 350.dp,
-                backgroundColor = Color.White,
-                foregroundColor = Brush.horizontalGradient(
-                    listOf(
-                        Color(0xFFCC3C3C),
-                        Color(0xFFCA6363)
+            ) {
+            val listState = rememberLazyListState()
+            LazyColumn(state = listState) {
+                item {
+                    Text(
+                        text = "Bayi Merasa Kesakitan",
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = poppinsFamily,
                     )
-                ),
-                percent = value1.toInt(),
-                isTextShown = true
-            )
-
-            Text(
-                text = "Bayi Sedang Lapar",
-                fontSize = 10.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = poppinsFamily,
-            )
-            ProgressBarCustom(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(10.dp))
-                    .height(11.dp),
-                width = 350.dp,
-                backgroundColor = Color.White,
-                foregroundColor = Brush.horizontalGradient(
-                    listOf(
-                        Color(0xFFCC3C3C),
-                        Color(0xFFCA6363)
+                    ProgressBarCustom(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(10.dp))
+                            .height(11.dp),
+                        width = 350.dp,
+                        backgroundColor = Color.White,
+                        foregroundColor = Brush.horizontalGradient(
+                            listOf(
+                                Color(0xFFCC3C3C),
+                                Color(0xFFCA6363)
+                            )
+                        ),
+                        percent = value1.toInt(),
+                        isTextShown = true
                     )
-                ),
-                percent = value2.toInt(),
-                isTextShown = true
-            )
-
-            Text(
-                text = "Bayi Sedang Lelah",
-                fontSize = 10.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = poppinsFamily,
-            )
-            ProgressBarCustom(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(10.dp))
-                    .height(11.dp),
-                width = 350.dp,
-                backgroundColor = Color.White,
-                foregroundColor = Brush.horizontalGradient(
-                    listOf(
-                        Color(0xFFCC3C3C),
-                        Color(0xFFCA6363)
+                }
+                item {
+                    Text(
+                        text = "Bayi Sedang Lapar",
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = poppinsFamily,
                     )
-                ),
-                percent = value3.toInt(),
-                isTextShown = true
-            )
-
-            Text(
-                text = "Bayi Sedang Merasa Kembung",
-                fontSize = 10.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = poppinsFamily,
-            )
-            ProgressBarCustom(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(10.dp))
-                    .height(11.dp),
-                width = 350.dp,
-                backgroundColor = Color.White,
-                foregroundColor = Brush.horizontalGradient(
-                    listOf(
-                        Color(0xFFCC3C3C),
-                        Color(0xFFCA6363)
+                    ProgressBarCustom(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(10.dp))
+                            .height(11.dp),
+                        width = 350.dp,
+                        backgroundColor = Color.White,
+                        foregroundColor = Brush.horizontalGradient(
+                            listOf(
+                                Color(0xFFCC3C3C),
+                                Color(0xFFCA6363)
+                            )
+                        ),
+                        percent = value2.toInt(),
+                        isTextShown = true
                     )
-                ),
-                percent = value4.toInt(),
-                isTextShown = true
-            )
-
-            Text(
-                text = "Bayi Merasa Kurang Nyaman",
-                fontSize = 10.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = poppinsFamily,
-            )
-            ProgressBarCustom(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(10.dp))
-                    .height(11.dp),
-                width = 350.dp,
-                backgroundColor = Color.White,
-                foregroundColor = Brush.horizontalGradient(
-                    listOf(
-                        Color(0xFFCC3C3C),
-                        Color(0xFFCA6363)
+                }
+                item {
+                    Text(
+                        text = "Bayi Sedang Lelah",
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = poppinsFamily,
                     )
-                ),
-                percent = value5.toInt(),
-                isTextShown = true,
-            )
-            
+                    ProgressBarCustom(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(10.dp))
+                            .height(11.dp),
+                        width = 350.dp,
+                        backgroundColor = Color.White,
+                        foregroundColor = Brush.horizontalGradient(
+                            listOf(
+                                Color(0xFFCC3C3C),
+                                Color(0xFFCA6363)
+                            )
+                        ),
+                        percent = value3.toInt(),
+                        isTextShown = true
+                    )
+                }
+                item {
+                    Text(
+                        text = "Bayi Sedang Merasa Kembung",
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = poppinsFamily,
+                    )
+                    ProgressBarCustom(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(10.dp))
+                            .height(11.dp),
+                        width = 350.dp,
+                        backgroundColor = Color.White,
+                        foregroundColor = Brush.horizontalGradient(
+                            listOf(
+                                Color(0xFFCC3C3C),
+                                Color(0xFFCA6363)
+                            )
+                        ),
+                        percent = value4.toInt(),
+                        isTextShown = true
+                    )
+                }
+                item {
+                    Text(
+                        text = "Bayi Merasa Kurang Nyaman",
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = poppinsFamily,
+                    )
+                    ProgressBarCustom(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(10.dp))
+                            .height(11.dp),
+                        width = 350.dp,
+                        backgroundColor = Color.White,
+                        foregroundColor = Brush.horizontalGradient(
+                            listOf(
+                                Color(0xFFCC3C3C),
+                                Color(0xFFCA6363)
+                            )
+                        ),
+                        percent = value5.toInt(),
+                        isTextShown = true,
+                    )
+                }
+            }
         }
     }
-}
-
-@Composable
-fun resultCard(
-    modifier: Modifier = Modifier,
-    hasil: String
-) {
-    Text(text = hasil)
 }
 
 @Preview(showBackground = true)

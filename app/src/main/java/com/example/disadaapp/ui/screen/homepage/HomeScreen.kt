@@ -1,23 +1,29 @@
 package com.example.disadaapp.ui.screen.homepage
 
 import android.annotation.SuppressLint
+import android.content.ContentResolver
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -32,11 +38,12 @@ import com.example.disadaapp.UiState
 import com.example.disadaapp.Utils.AudioService
 import com.example.disadaapp.Utils.AudioService2
 import com.example.disadaapp.Utils.AudioViewModel
-import com.example.disadaapp.data.respone.Kemungkinan
+import com.example.disadaapp.data.respone.PredictsResponse
 import com.example.disadaapp.ui.Component.ButtonCustomRecord
 import com.example.disadaapp.ui.Component.CardCustom
 import com.example.disadaapp.ui.Component.PredictCard
-import com.example.disadaapp.ui.Component.resultCard
+import com.example.disadaapp.ui.Component.RecommendedCard
+import com.example.disadaapp.ui.Component.ResultCard
 import java.io.File
 
 
@@ -58,31 +65,30 @@ fun HomeScreen(
     var probabilities4 by remember { mutableStateOf("") }
     var probabilities5 by remember { mutableStateOf("") }
 
+    val contentResolver = LocalContext.current.contentResolver
     var audioFile: File? = null
     val cacheDir = LocalContext.current.cacheDir
     val mediaRecorder by remember { mutableStateOf<AudioService?>(null) }
     val playerRecorder by remember { mutableStateOf<AudioService?>(null) }
     var isRecording by remember { mutableStateOf(false) }
-    
-    viewModel.hasil.collectAsState(initial = UiState.Loading).value.let { 
+    val getContent = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        uri?.let {
+            audioFile = File(cacheDir, "temp_audio.wav")
+            copyUriToFile(contentResolver, uri, audioFile!!)
+            viewModel.predictAudio(audioFile!!)
+        }
+    }
+
+    viewModel.hasil.collectAsState(initial = UiState.Loading).value.let {
         when(it) {
             is UiState.Loading -> {
-                
+                CircularProgressIndicator(color = Color.White)
             }
             is UiState.Success<*> -> {
-                CardCustom(
-                    value1 = probabilities1.toInt(),
-                    value2 = probabilities2.toInt(),
-                    value3 = probabilities3.toInt(),
-                    value4 = probabilities4.toInt(),
-                    value5 = probabilities5.toInt(),
-                    recomValue = resultRecommended,
-                    expValue = resultExplaination,
-                    result = result
-                )
+                ResultCard(result = result)
             }
             is UiState.Error -> {
-                
+
             }
         }
     }
@@ -90,7 +96,7 @@ fun HomeScreen(
     viewModel.kemungkinan.collectAsState(initial = UiState.Loading).value.let {
         when(it) {
             is UiState.Loading -> {
-                //ButtonCustomRecord(onClick = { audioFile?.let { it1 -> viewModel.predictAudio(it1) } }, modifier = modifier)
+                CircularProgressIndicator(color = Color.White)
             }
             is UiState.Success<*> -> {
                 PredictCard(
@@ -110,21 +116,13 @@ fun HomeScreen(
     viewModel.rekomendasiPanganan.collectAsState(initial = UiState.Loading).value.let {
         when(it) {
             is UiState.Loading -> {
-                //viewModel.predictAudio(audioFile!!)
+                CircularProgressIndicator(color = Color.White)
 
             }
             is UiState.Success<*> -> {
-                CardCustom(
-                    recomValue = resultRecommended,
+                RecommendedCard(
                     expValue = resultExplaination,
-                    value1 = probabilities1.toInt(),
-                    value2 = probabilities2.toInt(),
-                    value3 = probabilities3.toInt(),
-                    value4 = probabilities4.toInt(),
-                    value5 = probabilities5.toInt(),
-                    result = result
-
-                )
+                    recomValue = resultRecommended)
             }
             is UiState.Error -> {
 
@@ -213,8 +211,26 @@ fun HomeScreen(
                 }) {
                     Text(text = "Stop Pemutaran")
                 }
+                Button(
+                    onClick = {
+                        getContent.launch("audio/*")
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                ) {
+                    Text("Unggah File Audio")
+                }
             }
         }
     }
 
+}
+
+fun copyUriToFile(contentResolver: ContentResolver, uri: Uri, file: File) {
+    contentResolver.openInputStream(uri)?.use { inputStream ->
+        file.outputStream().use { outputStream ->
+            inputStream.copyTo(outputStream)
+        }
+    }
 }

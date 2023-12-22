@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 data class PredictsResponse(
 
 	@field:SerializedName("kemungkinan")
-	val kemungkinan: Kemungkinan? = null,
+	val kemungkinan: List<Kemungkinan?>,
 
 	@field:SerializedName("rekomendasi_panganan")
 	val rekomendasiPanganan: RekomendasiPanganan? = null,
@@ -17,7 +17,7 @@ data class PredictsResponse(
 data class Kemungkinan(
 
 	@field:SerializedName("merasa kesakitan")
-	val merasaKesakitan: Any? = null,
+    var merasaKesakitan: Any? = null,
 
 	@field:SerializedName("sedang lapar")
 	val sedangLapar: Any? = null,

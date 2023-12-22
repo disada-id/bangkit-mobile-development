@@ -44,6 +44,7 @@ object AppModule {
         return Retrofit.Builder()
 //            .baseUrl("https://disada-backend-cc-ctlb7v5egq-et.a.run.app/auth/")
             .baseUrl("https://disada-flask-service-ctlb7v5egq-et.a.run.app/")
+//            .baseUrl("https://2802-180-253-248-48.ngrok-free.app/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()

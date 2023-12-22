@@ -1,13 +1,17 @@
 package com.example.disadaapp.ui.screen.homepage
 
 import android.annotation.SuppressLint
-import android.util.Log
+import android.content.ContentResolver
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -15,7 +19,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,7 +40,9 @@ import com.example.disadaapp.data.respone.Kemungkinan
 import com.example.disadaapp.ui.Component.ButtonCustomRecord
 import com.example.disadaapp.ui.Component.CardCustom
 import com.example.disadaapp.ui.Component.PredictCard
-import com.example.disadaapp.ui.Component.resultCard
+import com.github.squti.androidwaverecorder.WaveRecorder
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import java.io.File
 
 
@@ -60,10 +65,27 @@ fun HomeScreen(
     var probabilities5 by remember { mutableStateOf("") }
 
     var audioFile: File? = null
+        // audio
     val cacheDir = LocalContext.current.cacheDir
+    val filePath: String = cacheDir.absolutePath + "/temp_audio.wav"
+    val waveRecorder = WaveRecorder(filePath)
+
+    val contentResolver = LocalContext.current.contentResolver
     val mediaRecorder by remember { mutableStateOf<AudioService?>(null) }
     val playerRecorder by remember { mutableStateOf<AudioService?>(null) }
     var isRecording by remember { mutableStateOf(false) }
+    val coroutineScope = remember { CoroutineScope(Dispatchers.Default) }
+
+
+    val getContent = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        uri?.let {
+//            audioFile = File(cacheDir, "temp_audio.${contentResolver.getType(it)?.substringAfter("/")}")
+            audioFile = File(cacheDir, "temp_audio.wav")
+
+            copyUriToFile(contentResolver, uri, audioFile!!)
+            viewModel.predictAudio(audioFile!!)
+        }
+    }
     
     viewModel.hasil.collectAsState(initial = UiState.Loading).value.let { 
         when(it) {
@@ -144,10 +166,6 @@ fun HomeScreen(
     probabilities3 = viewModel.kemungkinan.value?.sedangLapar.hashCode().toString()
     probabilities4 = viewModel.kemungkinan.value?.sedangLelah.hashCode().toString()
     probabilities5 = viewModel.kemungkinan.value?.sedangMerasaKembung.hashCode().toString()
-//
-//    LaunchedEffect(kemungkinan) {
-//        hasilPredictAudio = viewModel.hasil.value
-//    }
 
 
     resultRecommended = viewModel.rekomendasiPanganan.value?.rekomendasi.toString()
@@ -189,31 +207,35 @@ fun HomeScreen(
                 )
             }
 
-            ButtonCustomRecord(
-                onClick = {
-                    if (isRecording) {
-                        recorder.stopRecorder()
+                ButtonCustomRecord(
+                    onClick = {
+                        if (isRecording) {
+//                        recorder.stopRecorder()
+                            waveRecorder.startRecording()
 //                        mediaRecorder?.stopRecorder()
-                        isRecording = false
-                        Log.d("AudioRecording", "Perekaman selesai. Menghentikan perekaman.")
-
-                    } else {
-                        // Memulai perekaman jika tidak sedang merekam
-                        File(cacheDir, "temp_audio.wav").also {
-                            recorder.startRecorder(it)
-//                            mediaRecorder?.startRecorder(it)
-                            audioFile = it
+                            isRecording = false
+                        } else {
+                            // Memulai perekaman jika tidak sedang merekam
+                            waveRecorder.stopRecording()
+                            File(cacheDir, "temp_audio.wav").also {
+                                audioFile = it
+                                viewModel.predictAudio(it)
+                            }
                             isRecording = true
-                            viewModel.predictAudio(audioFile!!)
-                            Log.d("AudioRecording", "Memulai perekaman. File: ${it.absolutePath}")
-
+//                        File(cacheDir, "temp_audio.wav").also {
+//                            recorder.startRecorder(it)
+////                            mediaRecorder?.startRecorder(it)
+//                            audioFile = it
+//                            isRecording = true
+//                            viewModel.predictAudio(audioFile!!)
+//
+//                        }
                         }
-                    }
-                },
-                modifier = Modifier.background(
-                    if (isRecording) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary
+                    },
+                    modifier = Modifier.background(
+                        if (isRecording) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary
+                    )
                 )
-            )
 
             Row() {
                 Button(onClick = {
@@ -228,8 +250,29 @@ fun HomeScreen(
                 }) {
                     Text(text = "Stop Pemutaran")
                 }
+                // Button untuk memilih file audio
+                Button(
+                    onClick = {
+                        getContent.launch("audio/*")
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                ) {
+                    Text("Unggah File Audio")
+                }
             }
         }
     }
 
+
+
+}
+// Fungsi untuk menyalin data dari Uri ke File
+fun copyUriToFile(contentResolver: ContentResolver, uri: Uri, file: File) {
+    contentResolver.openInputStream(uri)?.use { inputStream ->
+        file.outputStream().use { outputStream ->
+            inputStream.copyTo(outputStream)
+        }
+    }
 }

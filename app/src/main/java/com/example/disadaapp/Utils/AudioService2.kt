@@ -10,10 +10,14 @@ import androidx.core.net.toUri
 import java.io.File
 import java.io.FileOutputStream
 
+
+
+
 class AudioService2(private val context: Context) {
 
     private var mediaPlayer: MediaPlayer? = null
     private var mediaRecorder: MediaRecorder? = null
+
 
     private fun createRecorder(): MediaRecorder {
         return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -30,7 +34,7 @@ class AudioService2(private val context: Context) {
             setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
             setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
             setMaxDuration(5000) // max duration 7 seconds
-            setOutputFile(FileOutputStream(outputFile).fd)
+            setOutputFile(FileOutputStream(outputFile.absoluteFile).fd)
             setAudioEncodingBitRate(3442 * 1000) // Change this line
             setAudioSamplingRate(8000)
 

@@ -105,10 +105,17 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
 
+<<<<<<< HEAD
     debugImplementation ("com.github.chuckerteam.chucker:library:4.0.0")
     releaseImplementation ("com.github.chuckerteam.chucker:library-no-op:4.0.0")
 
     implementation ("com.github.squti:Android-Wave-Recorder:1.7.0")
 
 
+=======
+    //chuker
+    debugImplementation ("com.github.chuckerteam.chucker:library:4.0.0")
+    releaseImplementation ("com.github.chuckerteam.chucker:library-no-op:4.0.0")
+
+>>>>>>> c63b5496e09491a0f6c4005fc20d020d683c2e42
 }

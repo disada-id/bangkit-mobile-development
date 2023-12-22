@@ -213,6 +213,7 @@ fun HomeScreen(
 //                        recorder.stopRecorder()
                             waveRecorder.startRecording()
 //                        mediaRecorder?.stopRecorder()
+<<<<<<< HEAD
                             isRecording = false
                         } else {
                             // Memulai perekaman jika tidak sedang merekam
@@ -221,6 +222,15 @@ fun HomeScreen(
                                 audioFile = it
                                 viewModel.predictAudio(it)
                             }
+=======
+                        isRecording = false
+                    } else {
+                        // Memulai perekaman jika tidak sedang merekam
+                        File(cacheDir, "temp_audio.wav").also {
+                            recorder.startRecorder(it)
+//                            mediaRecorder?.startRecorder(it)
+                            audioFile = it
+>>>>>>> c63b5496e09491a0f6c4005fc20d020d683c2e42
                             isRecording = true
 //                        File(cacheDir, "temp_audio.wav").also {
 //                            recorder.startRecorder(it)
